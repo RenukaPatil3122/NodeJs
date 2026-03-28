@@ -1,17 +1,24 @@
-const crypto = require("node:crypto");
+process.nextTick(() => console.log("this is process.nextTick 1"));
+process.nextTick(() => {
+  console.log("this is process.nextTick 2");
+  process.nextTick(() =>
+    console.log("this is the inner next tick inside next tick"),
+  );
+});
+process.nextTick(() => console.log("this is process.nextTick 3"));
 
-process.env.UV_THREADPOOL_SIZE = 8;
-const MAX_CALLS = 8;
+Promise.resolve().then(() => console.log("this is Promise.resolve 1"));
+Promise.resolve().then(() => {
+  console.log("this is Promise.resolve 2");
+  process.nextTick(() =>
+    console.log("this is the inner next tick inside Promise then block"),
+  );
+});
+Promise.resolve().then(() => console.log("this is Promise.resolve 3"));
 
-const start = Date.now();
-for (let i = 0; i < MAX_CALLS; i++) {
-  crypto.pbkdf2("password", "salt", 100000, 512, "sha512", () => {
-    console.log(`Hash: ${i + 1}`, Date.now() - start);
-  });
-}
+// Promise.resolve().then(() => console.log("this is promise.resolve 1"));
+// process.nextTick(() => console.log("this is process.nexttick 1"));
 
-// const start = Date.now();
-// crypto.pbkdf2Sync("password", "salt", 100000, 512, "sha512");
-// crypto.pbkdf2Sync("password", "salt", 100000, 512, "sha512");
-// crypto.pbkdf2Sync("password", "salt", 100000, 512, "sha512");
-// console.log("Hash: ", Date.now() - start);
+// console.log("console.log 1");
+// process.nextTick(() => console.log("this is process.next 1"));
+// console.log("console.log 2");
