@@ -1,5 +1,5 @@
 {
-  "name": "my-custom-package",
+  "name": "renukap-greet-package",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
